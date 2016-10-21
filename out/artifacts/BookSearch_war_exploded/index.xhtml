@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="layout.xhtml">
+    <ui:define name="title">Create new book</ui:define>
+    <ui:define name="content">
+        <h:form id="bookForm">
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Name: "/>
+                <h:inputText value="#{bookController.book.name}" required="true">
+                    <f:validateLength minimum="4" maximum="30"/>
+                </h:inputText>
+
+                <h:outputLabel value="Author: "/>
+                <h:selectOneMenu value="#{bookController.book.author.name}" >
+                    <f:selectItems value="#{authorService.allAuthorsNames}"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel value="Price: "/>
+                <h:inputText value="#{bookController.book.price}" required="true">
+                    <f:validateDoubleRange minimum="0.0" maximum="99999.99"/>
+                </h:inputText>
+
+                <h:outputLabel value="Description: "/>
+                <h:inputTextarea value="#{bookController.book.description}" required="true" cols="30" rows="10">
+                    <f:validateLength minimum="0" maximum="500"/>
+                </h:inputTextarea>
+
+            </h:panelGrid>
+
+            <h:commandButton value="Create book" action="#{bookController.createBook}">
+                <!--<f:ajax execute="bookForm" render=":bookList :errors"/>-->
+            </h:commandButton>
+            <!--<h:inputText value="#{bookController.book.author.name}" required="true">
+                    <f:validateLength minimum="4" maximum="30"/>
+                </h:inputText>-->
+
+</h:form>
+        <hr/>
+        <h1>List of books</h1>
+<h:form>
+        <h:dataTable id="bookList" value="#{bookController.bookList}" var="book" border="1">
+
+            <h:column>
+                <f:facet name="header">Name: </f:facet>
+                <h:link value="#{book.name}" outcome="book">
+                    <f:param name="id" value="#{book.id}"/>
+                </h:link>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+                <h:outputText value="#{book.price}"/>
+            </h:column>
+
+            <h:column>
+                <h:commandLink action="index" value="Delete" actionListener="#{bookController.remove(book)}"/>
+            </h:column>
+
+        </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
